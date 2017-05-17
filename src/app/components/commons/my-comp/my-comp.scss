@@ -1,3 +1,6 @@
+@import 'src/app/styles/variables';
+
 p {
-    color: blue;
+    margin-top: $marge;
+    margin-bottom: $marge;
 }

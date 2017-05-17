@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CompressionPlugin = require("compression-webpack-plugin")
 const StyleLintPlugin = require('stylelint-webpack-plugin')
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const path = require("path")
 
 function resolve(dir) {
@@ -29,8 +30,7 @@ module.exports = {
     devtool: 'source-map',
 
     module: {
-        rules: [
-            {
+        rules: [{
                 enforce: 'post',
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader']
@@ -38,6 +38,7 @@ module.exports = {
             {
                 enforce: 'post',
                 test: /\.scss$/,
+                exclude: /themes/,
                 use: ['style-loader',
                     'css-loader',
                     {
@@ -52,6 +53,27 @@ module.exports = {
                     },
                     'sass-loader'
                 ]
+            },
+            {
+                enforce: 'post',
+                test: /\.scss$/,
+                include: /themes/,
+                use: ExtractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: ['css-loader',
+                        {
+                            loader: 'postcss-loader',
+                            options: {
+                                plugins: function () {
+                                    return [
+                                        require('autoprefixer')
+                                    ];
+                                }
+                            }
+                        },
+                        'sass-loader'
+                    ]
+                })
             },
             {
                 test: /\.html$/,
@@ -91,6 +113,7 @@ module.exports = {
             configFile: 'conf/stylelint.json',
             emitErrors: false
         }),
-        new CompressionPlugin()
+        new CompressionPlugin(),
+        new ExtractTextPlugin("theme.css"),
     ]
 }
