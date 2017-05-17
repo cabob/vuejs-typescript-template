@@ -3,7 +3,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { Store } from './store';
 import router from './router';
-import './styles/themes/theme-Concordia.scss';
+import './styles/themes/dev-theme.scss';
 
 Vue.config.productionTip = false;
 
